@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>a.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+a.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">tkinter </span><span class="s0">as </span><span class="s1">tk</span>
+<span class="s0">from </span><span class="s1">tkinter </span><span class="s0">import </span><span class="s1">messagebox</span>
+<span class="s0">import </span><span class="s1">time</span>
+
+
+<span class="s0">class </span><span class="s1">ChronometerApp:</span>
+    <span class="s0">def </span><span class="s1">__init__(self</span><span class="s0">, </span><span class="s1">master):</span>
+        <span class="s1">self.master = master</span>
+        <span class="s1">self.master.title(</span><span class="s2">&quot;Kronometre&quot;</span><span class="s1">)</span>
+        <span class="s1">self.master.configure(bg=</span><span class="s2">'#2E2E2E'</span><span class="s1">)</span>
+
+        <span class="s1">self.label_time = tk.Label(master</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">&quot;Süre girin:&quot;</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+        <span class="s1">self.label_time.pack()</span>
+
+        <span class="s1">self.entry_time = tk.Entry(master</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+        <span class="s1">self.entry_time.pack()</span>
+
+        <span class="s1">self.start_button = tk.Button(master</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">&quot;Kronometreyi Başlat&quot;</span><span class="s0">, </span><span class="s1">command=self.start_chronometer</span><span class="s0">,</span><span class="s1">bg=</span><span class="s2">'#404040'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+        <span class="s1">self.start_button.pack()</span>
+
+        <span class="s1">self.label_teams = tk.Label(master</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">&quot;Puanlar&quot;</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+        <span class="s1">self.label_teams.pack()</span>
+
+        <span class="s1">self.team_scores = [</span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">]</span>
+
+        <span class="s1">self.team_labels = []</span>
+        <span class="s1">self.team_buttons_plus = []</span>
+        <span class="s1">self.team_buttons_minus = []</span>
+
+        <span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range(</span><span class="s3">5</span><span class="s1">):</span>
+            <span class="s1">frame = tk.Frame(master</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s1">)</span>
+            <span class="s1">frame.pack()</span>
+
+            <span class="s1">label = tk.Label(frame</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">f&quot;Takım </span><span class="s0">{</span><span class="s1">i + </span><span class="s3">1</span><span class="s0">}</span><span class="s2">&quot;</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+            <span class="s1">label.pack(side=tk.LEFT)</span>
+
+            <span class="s1">button_minus = tk.Button(frame</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">&quot;-&quot;</span><span class="s0">, </span><span class="s1">command=</span><span class="s0">lambda </span><span class="s1">idx=i: self.update_score(idx</span><span class="s0">, </span><span class="s1">-</span><span class="s3">10</span><span class="s1">)</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#404040'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+            <span class="s1">button_minus.pack(side=tk.LEFT)</span>
+
+            <span class="s1">score_label = tk.Label(frame</span><span class="s0">, </span><span class="s1">text=str(self.team_scores[i])</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#2E2E2E'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+            <span class="s1">score_label.pack(side=tk.LEFT)</span>
+
+            <span class="s1">button_plus = tk.Button(frame</span><span class="s0">, </span><span class="s1">text=</span><span class="s2">&quot;+&quot;</span><span class="s0">, </span><span class="s1">command=</span><span class="s0">lambda </span><span class="s1">idx=i: self.update_score(idx</span><span class="s0">, </span><span class="s3">10</span><span class="s1">)</span><span class="s0">, </span><span class="s1">bg=</span><span class="s2">'#404040'</span><span class="s0">, </span><span class="s1">fg=</span><span class="s2">'white'</span><span class="s1">)</span>
+            <span class="s1">button_plus.pack(side=tk.LEFT)</span>
+            <span class="s1">self.team_labels.append(score_label)</span>
+            <span class="s1">self.team_buttons_plus.append(button_plus)</span>
+            <span class="s1">self.team_buttons_minus.append(button_minus)</span>
+
+    <span class="s0">def </span><span class="s1">start_chronometer(self):</span>
+        <span class="s0">try</span><span class="s1">:</span>
+            <span class="s1">target_time = float(self.entry_time.get())</span>
+        <span class="s0">except </span><span class="s1">ValueError:</span>
+            <span class="s1">messagebox.showerror(</span><span class="s2">&quot;Hata&quot;</span><span class="s0">, </span><span class="s2">&quot;Lütfen geçerli bir süre girin.&quot;</span><span class="s1">)</span>
+            <span class="s0">return</span>
+
+        <span class="s1">self.label_time.config(text=</span><span class="s2">&quot;Kronometre çalışıyor...&quot;</span><span class="s1">)</span>
+        <span class="s1">self.start_button.config(state=tk.DISABLED)</span>
+
+        <span class="s1">start_time = time.time()</span>
+
+        <span class="s0">while True</span><span class="s1">:</span>
+            <span class="s1">elapsed_time = time.time() - start_time</span>
+
+
+            <span class="s0">if </span><span class="s1">elapsed_time &gt;= target_time:</span>
+                <span class="s1">messagebox.showinfo(</span><span class="s2">&quot;Süre doldu&quot;</span><span class="s0">, </span><span class="s2">&quot;Süre doldu.&quot;</span><span class="s1">)</span>
+                <span class="s0">break</span>
+
+
+            <span class="s1">self.label_time.config(text=</span><span class="s2">f&quot;Geçen zaman: </span><span class="s0">{</span><span class="s1">elapsed_time</span><span class="s0">:</span><span class="s2">.2f</span><span class="s0">} </span><span class="s2">saniye&quot;</span><span class="s1">)</span>
+
+
+            <span class="s1">self.master.update()</span>
+
+
+            <span class="s1">time.sleep(</span><span class="s3">0.01</span><span class="s1">)</span>
+
+
+        <span class="s1">self.label_time.config(text=</span><span class="s2">&quot;Süre girin:&quot;</span><span class="s1">)</span>
+        <span class="s1">self.start_button.config(state=tk.NORMAL)</span>
+
+    <span class="s0">def </span><span class="s1">update_score(self</span><span class="s0">, </span><span class="s1">team_index</span><span class="s0">, </span><span class="s1">delta):</span>
+        <span class="s1">self.team_scores[team_index] += delta</span>
+        <span class="s1">self.team_labels[team_index].config(text=str(self.team_scores[team_index]))</span>
+
+<span class="s0">if </span><span class="s1">__name__ == </span><span class="s2">&quot;__main__&quot;</span><span class="s1">:</span>
+    <span class="s1">root = tk.Tk()</span>
+    <span class="s1">app = ChronometerApp(root)</span>
+    <span class="s1">root.mainloop()</span>
+</pre>
+</body>
+</html>
